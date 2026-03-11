@@ -1,0 +1,36 @@
+# Object files
+*.o
+*.obj
+
+# Executables
+a.out
+*.exe
+
+# Build directories
+build/
+out/
+bin/
+.vscode/
+target/
+
+# Debug symbols
+*.pdb
+*.idb
+*.ilk
+
+# IDE and cache files
+*.log
+*.tlog
+*.sdf
+*.opensdf
+*.vcxproj.user
+*.cache
+
+# header files
+*.pch   
+*.ipch
+
+# Configuration and lock files
+*.toml
+*.lock
+

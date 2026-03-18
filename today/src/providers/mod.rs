@@ -3,6 +3,7 @@ use chrono::{Local, NaiveDate};
 
 pub mod textfile;
 pub mod csvfile;
+pub mod sqlite;
 
 pub trait EventProvider {
     fn name(&self) -> String;

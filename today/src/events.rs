@@ -21,7 +21,7 @@ impl MonthDay {
     }
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct Category {
     primary: String,
     secondary: Option<String>,

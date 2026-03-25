@@ -1,6 +1,7 @@
 mod birthday;
 mod events;
 mod providers;
+mod filters;
 
 
 use crate::events::{Category, Event, MonthDay};

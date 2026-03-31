@@ -7,6 +7,7 @@ use chrono::{NaiveDate, Local, Datelike};
 
 use crate::EventProvider;
 use crate::events::{Event, Category, MonthDay, EventKind};
+use crate::filters::EventFilter;
 
 enum ReadingState {
     Date,
@@ -42,7 +43,7 @@ impl EventProvider for TextFileProvider {
         self.name.clone()
     }
 
-    fn get_events(&self, events: &mut Vec<Event>) {
+    fn get_events(&self, filter: &EventFilter, events: &mut Vec<Event>) {
         let f = File::open(self.path.clone()).expect("path to text file");
         let reader = BufReader::new(f);
         let mut state = ReadingState::Date;
@@ -74,7 +75,9 @@ impl EventProvider for TextFileProvider {
                                 date, 
                                 description.clone(), 
                                 category);
-                            events.push(event);
+                            if filter.accepts(&event) {
+                                events.push(event);
+                            }
                         },
                         Err(_) => {
                             eprintln!("Invalid date '{}'", date_string);

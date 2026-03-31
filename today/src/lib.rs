@@ -3,9 +3,10 @@ mod events;
 mod providers;
 mod filters;
 
+pub use events::{MonthDay, Event, Category};
+pub use filters::{EventFilter, FilterBuilder};
+pub use providers::EventProvider;
 
-use crate::events::{Category, Event, MonthDay};
-use crate::providers::{EventProvider, SimpleProvider};
 use crate::providers::{
     csvfile::CSVFileProvider,
     textfile::TextFileProvider,
@@ -20,14 +21,14 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
     pub struct ProviderConfig {
-        name: String,
-        kind: String,
-        resource: Option<String>,
+        pub name: String,
+        pub kind: String,
+        pub resource: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
     pub struct Config {
-        providers: Vec::<ProviderConfig>,
+        pub providers: Vec::<ProviderConfig>,
 }
 
 
@@ -55,10 +56,10 @@ fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventP
                 let provider = CSVFileProvider::new(&cfg.name, &path);
                 providers.push(Box::new(provider));
             },
-            "simple" => {
+            /*"simple" => {
                 let provider = SimpleProvider::new(&cfg.name);
                 providers.push(Box::new(provider));
-            },
+            }, */
             "sqlite" => {
                 let resource = cfg.resource.as_ref()
                     .expect("Sqlite provider needs a resource");
@@ -75,29 +76,27 @@ fn create_providers(config: &Config, config_path: &Path) -> Vec::<Box<dyn EventP
     providers
 }
 
-pub fn run(config: &Config, config_path: &Path) -> Result<(), Box<dyn Error>> {
+pub fn run(config: &Config, config_path: &Path, filter: &EventFilter) -> Result<(), Box<dyn Error>> {
     birthday::handle_birthday();
 
     let mut events: Vec<Event> = Vec::new();
 
-    let today: NaiveDate = Local::now().date_naive();
-    let today_month_day = MonthDay::new(today.month(), today.day());
 
     let providers = create_providers(config, config_path);
 
     let mut count = 0;
     for provider in providers {
-        provider.get_events(&mut events); 
-        let new_count = events.len();
+        provider.get_events(filter, &mut events); 
+        /*let new_count = events.len();
         println!(
             "Got {} events from provider '{}'", 
             new_count - count,
-            provider.name());
-        count = new_count;
+            provider.name()); 
+        count = new_count; */
     }
     
     for event in events {
-        if today_month_day == event.month_day() {
+        if filter.accepts(&event) {
             println!("{}", event);
         }
     }

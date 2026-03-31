@@ -1,5 +1,6 @@
 use crate::events::{Category, Event};
 use chrono::{Local, NaiveDate};
+use crate::filters::EventFilter;
 
 pub mod textfile;
 pub mod csvfile;
@@ -7,10 +8,10 @@ pub mod sqlite;
 
 pub trait EventProvider {
     fn name(&self) -> String;
-    fn get_events(&self, events: &mut Vec<Event>);
+    fn get_events(&self, filter: &EventFilter, events: &mut Vec<Event>);
 }
 
-pub struct SimpleProvider {
+/*pub struct SimpleProvider {
     name: String,
 }
 impl SimpleProvider {
@@ -24,7 +25,7 @@ impl EventProvider for SimpleProvider {
     fn name(&self) -> String {
         self.name.clone()
     }
-    fn get_events(&self, events: &mut Vec<Event>) {
+    fn get_events(&self, filter: &EventFilter, events: &mut Vec<Event>) {
         let today: NaiveDate = Local::now().date_naive();
         let test_event = Event::new_singular(
             today,
@@ -33,8 +34,8 @@ impl EventProvider for SimpleProvider {
         );
         events.push(test_event);
     }
-}
-
+} */
+/*
 #[cfg(test)]
 mod tests {
 
@@ -67,3 +68,4 @@ mod tests {
         assert_eq!(event.category, Category::from_primary("test"));
     }
 }
+*/

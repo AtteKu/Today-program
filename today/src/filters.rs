@@ -46,7 +46,7 @@ impl EventFilter {
         // otherwise it will be rejected by the filter.
         results.iter().all(|&option| option)
     }
-}
+}    
 
 pub struct FilterBuilder {
     options: HashSet<FilterOption>,

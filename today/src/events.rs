@@ -9,6 +9,11 @@ pub struct MonthDay {
 }
 
 impl MonthDay {
+
+    pub fn month(&self) -> u32 { self.month }
+    
+    pub fn day(&self) -> u32 { self.day }
+
     pub fn new(month: u32, day: u32) -> Self {
         Self { month, day }
     }

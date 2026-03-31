@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use sqlite::{Connection, State};
 use chrono::NaiveDate;
 use crate::{Event, Category, EventProvider};
+use crate::filters::EventFilter;
 
 pub struct SQLiteProvider {
     name: String,
@@ -43,13 +44,11 @@ impl EventProvider for SQLiteProvider {
         self.name.clone()
     }
 
-    fn get_events(&self, events: &mut Vec<Event>) {
+    fn get_events(&self, filter: &EventFilter, events: &mut Vec<Event>) {
         let connection = Connection::open(self.path.clone()).unwrap();
         let category_map = self.get_categories(&connection);
-
         let event_query: String =
             "SELECT event_date, event_description, category_id FROM event".to_string();
-
         let mut statement = connection.prepare(event_query).unwrap();
         while let Ok(State::Row) = statement.next() {
             let date_string = statement.read::<String, _>("event_date").unwrap();
@@ -59,5 +58,6 @@ impl EventProvider for SQLiteProvider {
             let category = category_map.get(&category_id).unwrap();
             events.push(Event::new_singular(date, description.to_string(), category.clone()));
         }
+
     }
 }

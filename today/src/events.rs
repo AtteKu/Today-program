@@ -18,11 +18,14 @@ impl MonthDay {
         Self { month, day }
     }
     pub fn from_str(s: &str) -> Self {
-        assert!(s.len() == 4);
-        let month_string = &s[..2];
+
+        let removed_dash_if_included = s.replace("-", "");
+        assert!(removed_dash_if_included.len() == 4);
+
+        let month_string = &removed_dash_if_included[..2];
         let month = month_string.parse().unwrap();
-        let day: u32 = s[2..].parse().unwrap();
-        MonthDay { month, day }
+        let day: u32 = removed_dash_if_included[2..].parse().unwrap(); 
+        MonthDay { month, day }  
     }
 }
 
